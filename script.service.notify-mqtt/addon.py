@@ -35,7 +35,8 @@ def main():
     client.run()
 
     while not xbmc.abortRequested:
-            xbmc.sleep(1)
+            xbmc.sleep(5000)
+            p.status()
 
     logger.info('Abort requested')
     client.stop()

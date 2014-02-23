@@ -12,7 +12,7 @@ class EventPlayer(xbmc.Player):
         d = dict(kwargs)
         d['state'] = state
         if self.client:
-            self.client.publish(self.path, json.dumps(d), retain=True, qos=1)
+            self.client.publish(self.path, json.dumps(d), retain=False, qos=0)
 
     def type(self):
         if self.isPlayingAudio():

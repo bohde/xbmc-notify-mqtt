@@ -25,14 +25,15 @@ class MQ(object):
 
     def on_message(self, mosq, obj, msg):
         self.logger.info('Message receieved')
-        self.logger.debug('Message: %s %s %s', msg.topic, msg.qos, msg.payload)
+        msg.payload = unicode(msg.payload.decode('utf-8'))
+        msg.topic = unicode(msg.topic.decode('utf-8'))
+        self.logger.debug(u'Message: %s %s %s', msg.topic, msg.qos, msg.payload)
 
         try :
-            msg = json.loads(msg.payload)
-            self.sink.on_message(msg)
+            payload = json.loads(msg.payload)
+            self.sink.on_message(payload)
         except Exception as e:
-            self.logger.error('Unknown message exception: %', e)
-            self.logger.error('Faulty Message: %s %s %s', msg.topic, msg.qos, msg.payload)
+            self.logger.error(u'Faulty Message: %s %s %s', msg.topic, msg.qos, msg.payload)
 
 
     def on_subscribe(self, mosq, obj, mid, granted_qos):

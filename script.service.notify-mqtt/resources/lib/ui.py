@@ -15,10 +15,11 @@ class XbmcLogger(object):
         self.name = name
 
     def format_message(self, message):
-        return '%s -- %s' % (self.name, message,)
+        return u'%s -- %s' % (self.name, message,)
 
     def log(self, level, message, *args):
-        xbmc.log(self.format_message(message % args), level)
+        m = unicode(message) % args
+        xbmc.log(self.format_message(m).encode('ascii', 'replace'), level)
 
     def info(self, message, *args):
         self.log(xbmc.LOGNOTICE, message, *args)
@@ -82,7 +83,8 @@ class XbmcSink(object):
         return unicode(s).replace('"', r'\"').join('""')
 
     def call(self, method, *args):
-        xbmc.executebuiltin('%s(%s)' % (method, (','.join(map(self.escape, args)))))
+        method_call = u'%s(%s)' % (method, (','.join(map(self.escape, args))))
+        xbmc.executebuiltin(method_call.encode('ascii', 'replace'))
 
     def notify(self, title, body, time, img=None):
         args = [title, body, int(time * 1000)]

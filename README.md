@@ -22,6 +22,8 @@ Status will be published to the root + "/status".
 
 The service will display notifications published to root + "/all/messages".
 
+Play status is published under the topic root + "player/status". It will be a single string of playing, paused, or stopped
+
 Usage
 -----
 

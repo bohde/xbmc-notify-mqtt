@@ -10,8 +10,8 @@ class MQ(object):
         self.sink = sink
         self.logger = logger
 
-        self.topic_msgs = root + "/all/messages"
-        self.topic_status = root + hostname + "/status"
+        self.topic_msgs = "/all/messages"
+        self.topic_status = hostname + "/status"
 
         id = "xbmc-mqtt-%s" % (hostname,)
         self.client = mosquitto.Mosquitto(client_id=id, clean_session=False)
@@ -19,7 +19,7 @@ class MQ(object):
 
     def on_connect(self, mosq, obj, rc):
         self.sink.on_connect()
-        self.client.publish(self.topic_status, payload="online", qos=0, retain=True)
+        self.publish(self.topic_status, payload="online", qos=0, retain=True)
         self.client.subscribe(self.topic_msgs, 1)
 
 
@@ -35,25 +35,20 @@ class MQ(object):
             self.logger.error('Faulty Message: %s %s %s', msg.topic, msg.qos, msg.payload)
 
 
-    def on_publish(self, mosq, obj, mid):
-        pass
-
-
     def on_subscribe(self, mosq, obj, mid, granted_qos):
         self.logger.info("Subscribed: %s %s", mid, granted_qos)
 
 
-    def on_log(self, mosq, obj, level, string):
-        self.logger.info("Server log: [%s] %s", level, string)
+    def publish(self, topic, *args, **kwargs):
+        self.client.publish(self.root + topic, *args, **kwargs)
 
 
     def run(self):
         self.client.on_message = self.on_message
         self.client.on_connect = self.on_connect
-        self.client.on_publish = self.on_publish
         self.client.on_subscribe = self.on_subscribe
 
-        self.client.will_set(self.topic_status, payload="offline", qos=0, retain=True)
+        self.client.will_set(self.root + self.topic_status, payload="offline", qos=0, retain=True)
         self.client.reconnect_delay_set(delay=3, delay_max=30, exponential_backoff=True)
 
         try:

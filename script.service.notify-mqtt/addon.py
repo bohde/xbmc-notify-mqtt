@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #
+import xbmc
 import xbmcaddon
 import socket
 import sys
@@ -11,6 +12,7 @@ __cwd__ = xbmc.translatePath(addon.getAddonInfo('path')).decode("utf-8")
 sys.path.append(os.path.join(__cwd__, 'resources', 'lib' ))
 import mq
 import ui
+import events
 
 def main():
     logger = ui.XbmcLogger('Mqtt')
@@ -24,11 +26,16 @@ def main():
 
     sink = ui.XbmcSink()
 
+
     client = mq.MQ(hostname, broker, port, root, sink, logger)
+
+    p = events.EventPlayer()
+    p.client = client
+
     client.run()
 
     while not xbmc.abortRequested:
-            time.sleep(.1)
+            xbmc.sleep(1)
 
     logger.info('Abort requested')
     client.stop()

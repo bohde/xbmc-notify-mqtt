@@ -14,5 +14,9 @@
     <platform>all</platform>
     <summary lang="en">Integrate with a MQTT broker.</summary>
     <description lang="en">Receive and display notifications from a MQTT broker.</description>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+    <website>https://github.com/joshbohde/xbmc-notify-mqtt</website>
+    <source>https://github.com/joshbohde/xbmc-notify-mqtt</source>
+    <email>josh@joshbohde.com</email>
   </extension>
 </addon>

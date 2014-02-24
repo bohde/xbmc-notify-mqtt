@@ -21,6 +21,8 @@ def main():
     broker = addon.getSetting("host")
     port = int(addon.getSetting("port"))
     root = addon.getSetting("path")
+    username = addon.getSetting("username")
+    password = addon.getSetting("password") or None
 
     logger.info('Connecting to %s@%s:%s/%s', hostname, broker, port, root)
 
@@ -28,6 +30,7 @@ def main():
 
 
     client = mq.MQ(hostname, broker, port, root, sink, logger)
+    client.auth(username, password)
 
     p = events.EventPlayer()
     p.client = client

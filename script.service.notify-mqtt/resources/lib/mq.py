@@ -17,6 +17,10 @@ class MQ(object):
         self.client = mosquitto.Mosquitto(client_id=id, clean_session=False)
 
 
+    def auth(self, username, password=None):
+        self.client.username_pw_set(username, password)
+
+
     def on_connect(self, mosq, obj, rc):
         self.sink.on_connect()
         self.publish(self.topic_status, payload="online", qos=0, retain=True)
